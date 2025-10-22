@@ -33,6 +33,7 @@ int main()
 
     bool turn = true;
     int win = 0, loss = 0, draw = 0;
+    int dealerTotal = 0;
 
     //=-=-=-=--=-= GAME SIMULATION =-=-=--=-=-=-=-=-
     for (int i = 0; i < generations; i++)
@@ -53,8 +54,8 @@ int main()
 
                         if (handTotal < table[j]) // hit
                         {
+                            //  deal another card
                         }
-                        //  deal another card
                         else if (handTotal >= table[j])
                             turn = false;
                         else if (handTotal > 21) // player busts
@@ -66,10 +67,9 @@ int main()
 
         // Dealer play here ================================
 
-        // SHould have all the win cases included already, but double check cause i might be dumb
         // Only need to care about player hand, not the bots ============================
         // Need a way to handle this still, maybe an arr?
-        if (handTotal > dealerTotal && handTotal <= 21) // these vars still not initialized =======================
+        if (handTotal > dealerTotal && handTotal <= 21)
             win++;
         else if (dealerTotal > 21)
             win++;
