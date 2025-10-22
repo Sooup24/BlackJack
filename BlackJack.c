@@ -44,25 +44,27 @@ int main()
         // deal 2 cards to each player
         for (int k = 0; k < 2; k++)
             for (int j = 0; j < numPlayers; j++)
+            {
                 // pass out a card, calculate handTotal, dealerTotal
+            }
 
-                for (int j = 0; j < numPlayers; j++) // loop thru each player
+        for (int j = 0; j < numPlayers; j++) // loop thru each player
+        {
+            while (turn == true)
+            {
+                // Logic for aces and card values I think will go here ===============================
+
+                if (handTotal < table[j]) // hit
                 {
-                    while (turn == true)
-                    {
-                        // Logic for aces and card values I think will go here ===============================
-
-                        if (handTotal < table[j]) // hit
-                        {
-                            //  deal another card
-                        }
-                        else if (handTotal >= table[j])
-                            turn = false;
-                        else if (handTotal > 21) // player busts
-                            break;
-                    }
-                    turn = true;
+                    //  deal another card
                 }
+                else if (handTotal >= table[j])
+                    turn = false;
+                else if (handTotal > 21) // player busts
+                    break;
+            }
+            turn = true;
+        }
         // All players have gone, dealer plays, calc new win / loss / tie %
 
         // Dealer play here ================================
