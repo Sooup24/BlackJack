@@ -37,7 +37,7 @@ int main()
         else
             table[i] = rand() % 7 + 12; // set bot strategy, 12-18
     }
-    table[numPlayers - 1] = 15; // this is the dealer stratagy   // changed == 15 to = 15
+    table[numPlayers - 1] = 16; // this is the dealer stratagy   // changed == 15 to = 15
 
     bool turn = true;
     int win = 0, loss = 0, draw = 0;
@@ -63,9 +63,13 @@ int main()
             {
                 // pass out a card, calculate handTotal
                 card = rand() % 10 + 1;
-                if (card == 1){
-                    hands[j].hasAce += 1;   // changed from true
-                    hands[j].handTotal += 11;
+                if (card == 1)
+                {
+                    hands[j].hasAce += 1; // changed from true
+                    if (hands[j].hasAce > 1)
+                        hands[j].handTotal += 1;
+                    else
+                        hands[j].handTotal += 11;
                     // printf("Player %d given Ace!\n", j);
                 }
                 else
@@ -77,7 +81,9 @@ int main()
                 cards[card]--;
             }
         }
-        // for (int k = 0; k < numPlayers; k++){
+
+        // for (int k = 0; k < numPlayers; k++)
+        // {
         //     printf("Player %d - Hand Total: %d\n", k, hands[k].handTotal);
         // }
 
@@ -85,15 +91,13 @@ int main()
         {
             while (turn == true)
             {
-                // Logic for aces and card values I think will go here ===============================
-
                 if (hands[j].handTotal < table[j]) // hit
                 {
                     card = rand() % 10 + 1;
                     hands[j].handTotal += card;
-                    if (hands[j].handTotal > 21 && hands[j].hasAce == true && hands[j].aceFlipped == false)
+                    if (hands[j].handTotal > 21 && hands[j].hasAce > 0 && hands[j].aceFlipped == false)
                     {
-                        hands[j].handTotal = hands[j].handTotal - 1;
+                        hands[j].handTotal -= 10;
                         hands[j].aceFlipped = true;
                     }
                 }
@@ -102,15 +106,14 @@ int main()
                 else if (hands[j].handTotal > 21) // player busts
                     turn = false;
                 cards[card]--;
+
+                // printf("card = %d   ", card);
+                // printf("Current hand Player%d = %d\n", j, hands[j].handTotal);
             }
             turn = true;
         }
         // All players have gone, dealer plays, calc new win / loss / tie %
 
-        // Dealer play here ================================
-
-        // Only need to care about player hand, not the bots ============================
-        // Need a way to handle this still, maybe an arr?
         if (hands[mySeat].handTotal > hands[numPlayers].handTotal && hands[mySeat].handTotal <= 21)
             win++;
         else if (hands[numPlayers].handTotal > 21)
