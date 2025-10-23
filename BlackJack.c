@@ -81,13 +81,13 @@ int main()
             {
                 // Logic for aces and card values I think will go here ===============================
 
-                if (handTotal < table[j]) // hit
+                if (hands[j].handTotal < table[j]) // hit
                 {
                     //  deal another card
                 }
-                else if (handTotal >= table[j])
+                else if (hands[j].handTotal >= table[j])
                     turn = false;
-                else if (handTotal > 21) // player busts
+                else if (hands[j].handTotal > 21) // player busts
                     break;
             }
             turn = true;
@@ -98,15 +98,15 @@ int main()
 
         // Only need to care about player hand, not the bots ============================
         // Need a way to handle this still, maybe an arr?
-        if (handTotal > dealerTotal && handTotal <= 21)
+        if (hands[mySeat].handTotal > hands[numPlayers].handTotal && hands[mySeat].handTotal <= 21)
             win++;
-        else if (dealerTotal > 21)
+        else if (hands[numPlayers].handTotal > 21)
             win++;
-        else if (handTotal > 21)
+        else if (hands[mySeat].handTotal > 21)
             loss++;
-        else if (handTotal < dealerTotal && dealerTotal <= 21)
+        else if (hands[mySeat].handTotal < hands[numPlayers].handTotal && hands[numPlayers].handTotal <= 21)
             loss++;
-        else if (handTotal == dealerTotal)
+        else if (hands[mySeat].handTotal == hands[numPlayers].handTotal)
             draw++;
     }
 
