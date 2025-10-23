@@ -24,36 +24,41 @@ int main()
     int mySeat = 1; // which seat are you at table?
     srand(time(NULL));
 
-    int generations = 1; // How many games to simulate?
+    int generations = 21; // How many games to simulate?
 
     // fill seats at table
     for (int i = 0; i < numPlayers; i++)
     {
-        hands[i].handTotal = 0;
-        hands[i].hasAce = 0;
-        hands[i].aceFlipped = false;
         if (i + 1 == mySeat)
             table[i] = myStrategy; // swapped logic so last spot can always be dealer
         else
             table[i] = rand() % 7 + 12; // set bot strategy, 12-18
     }
+
     table[numPlayers - 1] = 16; // this is the dealer stratagy   // changed == 15 to = 15
 
     bool turn = true;
-    int win = 0, loss = 0, draw = 0;
+    float win = 0, loss = 0, draw = 0;
 
     //=-=-=-=--=-= GAME SIMULATION =-=-=--=-=-=-=-=-
     for (int i = 0; i < generations; i++)
     {
+        for (int i = 0; i < numPlayers; i++)
+        {
+            hands[i].handTotal = 0;
+            hands[i].hasAce = 0;
+            hands[i].aceFlipped = false;
+        }
+
         // create playing deck
         for (int k = 1; k < 11; k++) // skip index 0, each index will correspond to card num/value
             if (k == 10)
             {
-                cards[i] = 16 * decks;
+                cards[k] = 16 * decks;
             }
             else
             {
-                cards[i] = 4 * decks;
+                cards[k] = 4 * decks;
             }
         // deal 2 cards to each player INITIAL DEAL
         int card;
@@ -114,20 +119,20 @@ int main()
         }
         // All players have gone, dealer plays, calc new win / loss / tie %
 
-        if (hands[mySeat].handTotal > hands[numPlayers].handTotal && hands[mySeat].handTotal <= 21)
+        if (hands[mySeat].handTotal > hands[numPlayers - 1].handTotal && hands[mySeat].handTotal <= 21)
             win++;
-        else if (hands[numPlayers].handTotal > 21)
+        else if (hands[numPlayers - 1].handTotal > 21)
             win++;
         else if (hands[mySeat].handTotal > 21)
             loss++;
-        else if (hands[mySeat].handTotal < hands[numPlayers].handTotal && hands[numPlayers].handTotal <= 21)
+        else if (hands[mySeat].handTotal < hands[numPlayers - 1].handTotal && hands[numPlayers - 1].handTotal <= 21)
             loss++;
-        else if (hands[mySeat].handTotal == hands[numPlayers].handTotal)
+        else if (hands[mySeat].handTotal == hands[numPlayers - 1].handTotal)
             draw++;
     }
 
     printf("With strategy hit under %d...\n", myStrategy);
-    printf("Win: %d, Loss: %d, Draw: %d\n", win / generations, loss / generations, draw / generations);
+    printf("Win: %.0f, Loss: %.0f, Draw: %.0f\n", 100 * (win / generations), 100 * (loss / generations), 100 * (draw / generations));
 }
 
 //===========Gameplay loop for blackjack===========
