@@ -3,52 +3,79 @@
 #include <time.h>
 #include <stdbool.h>
 
-struct playerInfo
+typedef struct playerInfo
 {
     // stuff for gameplay loop here?
-};
+    int handTotal;
+    bool hasAce;
+    bool aceFlipped;
+} player;
 
 int main()
 {
     // =-=-=-=-=-=-=-= Conditions and setup =-=-=-=-=-=-=-=-=
     int decks = 2;
-    int cards[15];
+    int cards[11];
     int myStrategy = 15;
-    int dealerStrategy = 16;
-    int numPlayers = 3;    // includes me, so 3 players would be 2 bots+me
-    int table[numPlayers]; // How seating done at the table
+    int numPlayers = 4;    // includes me, so 3 players would be 2 bots+me (Changed to include dealer in this as well)
+    //maybe want to include dealer in numPlayers because of how we track aces in hands?
+    int table[numPlayers]; // How seating done at the table 
+    player hands[numPlayers];
     int mySeat = 1;        // which seat are you at table?
     srand(time(NULL));
 
-    int generations = 10; // How many games to simulate?
+    int generations = 1; // How many games to simulate?
 
     // fill seats at table
-    for (int i = 1; i <= numPlayers; i++)
+    for (int i = 0; i < numPlayers; i++)
     {
-        if (i == mySeat)
-            table[i - 1] = myStrategy;
+        hands[i].handTotal = 0;
+        hands[i].hasAce = false;
+        hands[i].aceFlipped = false;
+        if (i+1 == mySeat)
+            table[i] = myStrategy; // swapped logic so last spot can always be dealer
         else
-            table[i - 1] = rand() % 7 + 12; // set bot strategy, 12-18
+            table[i] = rand() % 7 + 12; // set bot strategy, 12-18
     }
+    table[numPlayers-1]==15; // this is the dealer stratagy
 
     bool turn = true;
     int win = 0, loss = 0, draw = 0;
-    int dealerTotal = 0;
-
+    
     //=-=-=-=--=-= GAME SIMULATION =-=-=--=-=-=-=-=-
     for (int i = 0; i < generations; i++)
     {
         // create playing deck
-        for (int k = 1; k < 15; k++) // skip index 0, each index will correspond to card num/value
-            cards[i] = 4 * decks;
-        // deal 2 cards to each player
-        for (int k = 0; k < 2; k++)
+        for (int k = 1; k < 11; k++) // skip index 0, each index will correspond to card num/value
+            if (k == 10){
+                cards[i] = 16 * decks;
+            } else {
+                cards[i] = 4 * decks;
+            }
+        // deal 2 cards to each player INITIAL DEAL
+        int card;
+        for (int k = 0; k < 2; k++) {
             for (int j = 0; j < numPlayers; j++)
             {
-                // pass out a card, calculate handTotal, dealerTotal
-            }
+                // pass out a card, calculate handTotal
+                card = rand() % 10 + 1;
+                if (card == 1){
+                    hands[j].hasAce = true;
+                    hands[j].handTotal += 11;
+                    //printf("Player %d given Ace!\n", j);
+                } else {
+                    hands[j].handTotal += card;
+                    //printf("Player %d given %d\n", j, card);
+                }
 
-        for (int j = 0; j < numPlayers; j++) // loop thru each player
+                cards[card]--;
+            }
+        }
+        // for (int k = 0; k < numPlayers; k++){
+        //     printf("Player %d - Hand Total: %d\n", k, hands[k].handTotal);
+        // }
+
+        for (int j = 0; j < numPlayers; j++) // loop thru each player TURN
         {
             while (turn == true)
             {
