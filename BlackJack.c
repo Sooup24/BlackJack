@@ -90,12 +90,19 @@ int main()
 
                 if (hands[j].handTotal < table[j]) // hit
                 {
-                    //  deal another card
+                    card = rand() % 10 + 1;
+                    hands[j].handTotal += card;
+                    if (hands[j].handTotal > 21 && hands[j].hasAce == true && hands[j].aceFlipped == false)
+                    {
+                        hands[j].handTotal = hands[j].handTotal - 1;
+                        hands[j].aceFlipped = true;
+                    }
                 }
-                else if (hands[j].handTotal >= table[j])
+                else if (hands[j].handTotal >= table[j]) // stand
                     turn = false;
                 else if (hands[j].handTotal > 21) // player busts
-                    break;
+                    turn = false;
+                cards[card]--;
             }
             turn = true;
         }
