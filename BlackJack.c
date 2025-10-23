@@ -37,7 +37,7 @@ int main()
         else
             table[i] = rand() % 7 + 12; // set bot strategy, 12-18
     }
-    table[numPlayers-1]==15; // this is the dealer stratagy
+    table[numPlayers-1] = 15; // this is the dealer stratagy   // changed == 15 to = 15
 
     bool turn = true;
     int win = 0, loss = 0, draw = 0;
