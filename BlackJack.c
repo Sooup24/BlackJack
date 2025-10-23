@@ -7,7 +7,7 @@ typedef struct playerInfo
 {
     // stuff for gameplay loop here?
     int handTotal;
-    bool hasAce;
+    int hasAce;
     bool aceFlipped;
 } player;
 
@@ -30,7 +30,7 @@ int main()
     for (int i = 0; i < numPlayers; i++)
     {
         hands[i].handTotal = 0;
-        hands[i].hasAce = false;
+        hands[i].hasAce = 0;
         hands[i].aceFlipped = false;
         if (i+1 == mySeat)
             table[i] = myStrategy; // swapped logic so last spot can always be dealer
@@ -60,7 +60,7 @@ int main()
                 // pass out a card, calculate handTotal
                 card = rand() % 10 + 1;
                 if (card == 1){
-                    hands[j].hasAce = true;
+                    hands[j].hasAce += 1;   // changed from true
                     hands[j].handTotal += 11;
                     //printf("Player %d given Ace!\n", j);
                 } else {
