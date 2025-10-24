@@ -15,10 +15,10 @@ typedef struct playerInfo
 int main()
 {
     // =-=-=-=-=-=-=-= Conditions and setup =-=-=-=-=-=-=-=-=
-    int decks = 2;
+    int decks = 200;
     int cards[11];
     int myStrategy = 15;
-    int numPlayers = 4; // includes me, so 3 players would be 2 bots+me (Changed to include dealer in this as well)
+    int numPlayers = 100; // includes me, so 3 players would be 2 bots+me (Changed to include dealer in this as well)
     // maybe want to include dealer in numPlayers because of how we track aces in hands?
     int table[numPlayers]; // How seating done at the table
     player hands[numPlayers];
@@ -44,7 +44,7 @@ int main()
 
     //=-=-=-=--=-= GAME SIMULATION =-=-=--=-=-=-=-=-
     omp_set_num_threads(NUMT);
-    #pragma omp parallel for schedule(dynamic, 1) reduction(+ : win, loss, draw)
+    #pragma omp parallel for schedule(dynamic, 1) reduction(+ : win, loss, draw) private(hands, cards)
     for (int i = 0; i < generations; i++)
     {
         for (int i = 0; i < numPlayers; i++)
@@ -93,7 +93,7 @@ int main()
 
         // for (int k = 0; k < numPlayers; k++)
         // {
-        //     printf("Player %d - Hand Total: %d\n", k, hands[k].handTotal);
+        //     printf("Generation %d - Player %d - Hand Total: %d\n", i, k, hands[k].handTotal);
         // }
 
         for (int j = 0; j < numPlayers; j++) // loop thru each player TURN
