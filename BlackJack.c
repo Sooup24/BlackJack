@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
+#include <omp.h>
 
 typedef struct playerInfo
 {
@@ -22,6 +23,7 @@ int main()
     int table[numPlayers]; // How seating done at the table
     player hands[numPlayers];
     int mySeat = 1; // which seat are you at table?
+    int NUMT = 4;
     srand(time(NULL));
 
     int generations = 21; // How many games to simulate?
@@ -41,6 +43,8 @@ int main()
     float win = 0, loss = 0, draw = 0;
 
     //=-=-=-=--=-= GAME SIMULATION =-=-=--=-=-=-=-=-
+    omp_set_num_threads(NUMT);
+    #pragma omp parallel for schedule(dynamic, 1) reduction(+ : win, loss, draw)
     for (int i = 0; i < generations; i++)
     {
         for (int i = 0; i < numPlayers; i++)
