@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <time.h>
 #include <stdbool.h>
 #include <omp.h>
@@ -15,18 +16,18 @@ typedef struct playerInfo
 int main()
 {
     // =-=-=-=-=-=-=-= Conditions and setup =-=-=-=-=-=-=-=-=
-    int decks = 200;
+    int decks = 4;
     int cards[11];
-    int myStrategy = 15;
-    int numPlayers = 100; // includes me, so 3 players would be 2 bots+me (Changed to include dealer in this as well)
+    int myStrategy = 16;
+    int numPlayers = 4; // includes me, so 3 players would be 2 bots+me (Changed to include dealer in this as well)
     // maybe want to include dealer in numPlayers because of how we track aces in hands?
     int table[numPlayers]; // How seating done at the table
     player hands[numPlayers];
     int mySeat = 1; // which seat are you at table?
-    int NUMT = 4;
+    int NUMT = 5;
     srand(time(NULL));
 
-    int generations = 21; // How many games to simulate?
+    int generations = 10; // How many games to simulate?
 
     // fill seats at table
     for (int i = 0; i < numPlayers; i++)
@@ -44,7 +45,7 @@ int main()
 
     //=-=-=-=--=-= GAME SIMULATION =-=-=--=-=-=-=-=-
     omp_set_num_threads(NUMT);
-    #pragma omp parallel for schedule(dynamic, 1) reduction(+ : win, loss, draw) private(hands, cards)
+    #pragma omp parallel for schedule(dynamic, 1) reduction(+ : win, loss, draw) private(hands, cards, turn)
     for (int i = 0; i < generations; i++)
     {
         for (int i = 0; i < numPlayers; i++)
@@ -91,11 +92,6 @@ int main()
             }
         }
 
-        // for (int k = 0; k < numPlayers; k++)
-        // {
-        //     printf("Generation %d - Player %d - Hand Total: %d\n", i, k, hands[k].handTotal);
-        // }
-
         for (int j = 0; j < numPlayers; j++) // loop thru each player TURN
         {
             while (turn == true)
@@ -120,23 +116,44 @@ int main()
                 // printf("Current hand Player%d = %d\n", j, hands[j].handTotal);
             }
             turn = true;
+            sleep(2.1);
         }
         // All players have gone, dealer plays, calc new win / loss / tie %
 
+        for (int k = 0; k < numPlayers; k++)
+                printf("Generation %d - Player %d - Hand Total: %d\n", i, k, hands[k].handTotal);
+
         if (hands[mySeat].handTotal > hands[numPlayers - 1].handTotal && hands[mySeat].handTotal <= 21)
+        {
             win++;
+            printf("Win\n");
+        }
         else if (hands[numPlayers - 1].handTotal > 21)
+        {
             win++;
+            printf("Win\n");
+        }
         else if (hands[mySeat].handTotal > 21)
+        {
             loss++;
+            printf("Loss\n");
+        }
         else if (hands[mySeat].handTotal < hands[numPlayers - 1].handTotal && hands[numPlayers - 1].handTotal <= 21)
+        {
             loss++;
+            printf("Loss\n");
+        }
         else if (hands[mySeat].handTotal == hands[numPlayers - 1].handTotal)
+        {
             draw++;
+            printf("Draw\n");
+        }
+        printf("\n");
+
     }
 
     printf("With strategy hit under %d...\n", myStrategy);
-    printf("Win: %.0f, Loss: %.0f, Draw: %.0f\n", 100 * (win / generations), 100 * (loss / generations), 100 * (draw / generations));
+    printf("Win: %.0f%% , Loss: %.0f%%, Draw: %.0f%%\n", 100 * (win / generations), 100 * (loss / generations), 100 * (draw / generations));
 }
 
 //===========Gameplay loop for blackjack===========
