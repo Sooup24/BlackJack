@@ -27,7 +27,7 @@ int main()
     int NUMT = 5;
     srand(time(NULL));
 
-    int generations = 250; // How many games to simulate?
+    int generations = 100000; // How many games to simulate?
 
     // fill seats at table
     for (int i = 0; i < numPlayers; i++)
@@ -44,8 +44,8 @@ int main()
     float win = 0, loss = 0, draw = 0;
 
     //=-=-=-=--=-= GAME SIMULATION =-=-=--=-=-=-=-=-
-    // omp_set_num_threads(NUMT);
-    // #pragma omp parallel for schedule(dynamic, 1) reduction(+ : win, loss, draw) private(hands, cards, turn)
+    omp_set_num_threads(NUMT);
+    #pragma omp parallel for schedule(dynamic, 1) reduction(+ : win, loss, draw) private(hands, cards, turn)
     for (int i = 0; i < generations; i++)
     {
         for (int i = 0; i < numPlayers; i++)
@@ -120,33 +120,33 @@ int main()
         }
         // All players have gone, dealer plays, calc new win / loss / tie %
 
-        for (int k = 0; k < numPlayers; k++)
-                printf("Generation %d - Player %d - Hand Total: %d\n", i, k, hands[k].handTotal);
+        // for (int k = 0; k < numPlayers; k++)
+        //         printf("Generation %d - Player %d - Hand Total: %d\n", i, k, hands[k].handTotal);
 
         if (hands[mySeat].handTotal > hands[numPlayers - 1].handTotal && hands[mySeat].handTotal <= 21)
         {
             win++;
-            printf("Win\n");
+            //printf("Win\n");
         }
         else if (hands[numPlayers - 1].handTotal > 21)
         {
             win++;
-            printf("Win\n");
+            //printf("Win\n");
         }
         else if (hands[mySeat].handTotal > 21)
         {
             loss++;
-            printf("Loss\n");
+            //printf("Loss\n");
         }
         else if (hands[mySeat].handTotal < hands[numPlayers - 1].handTotal && hands[numPlayers - 1].handTotal <= 21)
         {
             loss++;
-            printf("Loss\n");
+            //printf("Loss\n");
         }
         else if (hands[mySeat].handTotal == hands[numPlayers - 1].handTotal)
         {
             draw++;
-            printf("Draw\n");
+            //printf("Draw\n");
         }
         printf("\n");
 
