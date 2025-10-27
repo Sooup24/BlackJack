@@ -27,7 +27,7 @@ int main()
     int NUMT = 5;
     srand(time(NULL));
 
-    int generations = 10; // How many games to simulate?
+    int generations = 250; // How many games to simulate?
 
     // fill seats at table
     for (int i = 0; i < numPlayers; i++)
@@ -44,8 +44,8 @@ int main()
     float win = 0, loss = 0, draw = 0;
 
     //=-=-=-=--=-= GAME SIMULATION =-=-=--=-=-=-=-=-
-    omp_set_num_threads(NUMT);
-    #pragma omp parallel for schedule(dynamic, 1) reduction(+ : win, loss, draw) private(hands, cards, turn)
+    // omp_set_num_threads(NUMT);
+    // #pragma omp parallel for schedule(dynamic, 1) reduction(+ : win, loss, draw) private(hands, cards, turn)
     for (int i = 0; i < generations; i++)
     {
         for (int i = 0; i < numPlayers; i++)
@@ -116,7 +116,7 @@ int main()
                 // printf("Current hand Player%d = %d\n", j, hands[j].handTotal);
             }
             turn = true;
-            sleep(2.1);
+            //sleep(2.1);
         }
         // All players have gone, dealer plays, calc new win / loss / tie %
 
