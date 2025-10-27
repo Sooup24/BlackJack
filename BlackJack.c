@@ -148,7 +148,7 @@ int main()
             draw++;
             //printf("Draw\n");
         }
-        printf("\n");
+        //printf("\n");
 
     }
 
