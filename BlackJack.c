@@ -72,7 +72,10 @@ int main()
             for (int j = 0; j < numPlayers; j++)
             {
                 // pass out a card, calculate handTotal
-                card = rand() % 10 + 1;
+                do {
+                    card = rand() % 10 + 1;
+                } while (cards[card]<1);
+
                 if (card == 1)
                 {
                     hands[j].hasAce += 1; // changed from true
@@ -98,8 +101,23 @@ int main()
             {
                 if (hands[j].handTotal < table[j]) // hit
                 {
-                    card = rand() % 10 + 1;
-                    hands[j].handTotal += card;
+                    do {
+                        card = rand() % 10 + 1;
+                    } while (cards[card]<1);
+                    if (card == 1)
+                    {
+                        hands[j].hasAce += 1; // changed from true
+                        if (hands[j].hasAce > 1)
+                            hands[j].handTotal += 1;
+                        else
+                            hands[j].handTotal += 11;
+                    // printf("Player %d given Ace!\n", j);
+                    }
+                    else
+                    {
+                        hands[j].handTotal += card;
+                    // printf("Player %d given %d\n", j, card);
+                    }
                     if (hands[j].handTotal > 21 && hands[j].hasAce > 0 && hands[j].aceFlipped == false)
                     {
                         hands[j].handTotal -= 10;
@@ -156,6 +174,7 @@ int main()
     printf("Win: %.0f%% , Loss: %.0f%%, Draw: %.0f%%\n", 100 * (win / generations), 100 * (loss / generations), 100 * (draw / generations));
 }
 
+
 //===========Gameplay loop for blackjack===========
 // Dealer gives cards face up going clockwise (including self) until everyone has 2 cards
 // real game, first card for dealer would be face down, but I think we can ignore for this
@@ -169,4 +188,4 @@ int main()
 // Dealer bust - win
 // Tie hand with dealer - draw/wash, calcuate as a diff percentage
 // Player bust - lose
-// Player lower score than dealer - lose
+                                                              
